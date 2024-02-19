@@ -1,29 +1,26 @@
-import { CronService } from './cron/cron-service';
-import { CheckService } from '../domain/use-cases/checks/check-service';
-import { FileSystemDataSource } from '../infrastructure/datasource/file-system.datasource';
+import 'dotenv/config';
 import { LogRepositoryImpl } from '../infrastructure/repositories/log.repository.impl';
+import { FileSystemDataSource } from '../infrastructure/datasource/file-system.datasource';
+import { SendEmailLogs } from '../domain/use-cases/email/send-email-logs';
+import { EmailService } from './email/email.service';
 
 const fileSystemLogRepository = new LogRepositoryImpl(
     new FileSystemDataSource()
 );
 
+const emailService = new EmailService( fileSystemLogRepository );
+
 export class Server {
+
 
     static run () {
 
-        console.log('Server running...');
+        console.log('Server running...');        
 
-        // const url = 'http://google.es/';
-        const url = 'http://localhost:3000/';
-        CronService.createJob(
-            '*/3 * * * * *',
-            () => {
-                new CheckService(
-                    fileSystemLogRepository,                
-                    undefined,
-                    undefined
-                ).execute(url);
-            }
-        );
+        new SendEmailLogs(
+            emailService,
+            fileSystemLogRepository
+        ).execute( 'magl81299@gmail.com' );
+                
     }
 }

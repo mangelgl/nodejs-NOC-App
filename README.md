@@ -5,6 +5,7 @@
 
 ## Temas principales
 - Clean Architecture
+- DDD (Domain-Drive Design)
 - Inyección de dependencias (Dependency Injection)
 - JSON-Server
 - Casos de uso
